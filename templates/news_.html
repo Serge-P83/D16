@@ -1,0 +1,38 @@
+{% extends 'flatpages/default.html' %}
+
+{% load censor %}
+
+{% load cache %}
+    {% cache 300 title %}
+        {% block title %}
+        News
+        {% endblock title %}
+    {% endcache %}
+
+
+{% block content %}
+
+    <h1>{{ news_.header_post|censor }}</h1>
+<hr>
+    <h3>{{ news_.text_post|censor }}</h3>
+
+    {{ news_.post_data|date:'d M Y'}}
+<hr>
+
+
+
+{% if request.user.is_authenticated %}
+{% csrf_token %}
+
+            {% if subscribers %}
+                 <p>Отписаться от новостей:
+                <button><a href="{% url 'unsubscribe' news_.id %}">Отписаться</a></button></p>
+            {% else %}
+                 <p>Подписаться на новости:
+               <button><a href="{% url 'subscribe' news_.id %}">Подписаться</a></button></p>
+            {%endif%}
+
+
+{% endif %}
+
+{% endblock content %}
